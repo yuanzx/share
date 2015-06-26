@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>carousel example</title>
+
+        <!-- Shared assets -->
+        <link rel="stylesheet" type="text/css" href="../_shared/css/style.css">
+
+        <!-- Example assets -->
+        <link rel="stylesheet" type="text/css" href="jcarousel.responsive.css">
+
+        <script type="text/javascript" src="../../vendor/jquery/jquery.js"></script>
+        <script type="text/javascript" src="../../dist/jquery.jcarousel.js"></script>
+<!-- 
+         <script type="text/javascript" src="jcarousel.responsive.js"></script>
+ -->
+
+    <style>
+        .jcarousel-control-prev{
+            background:url('../../../prev.png') center center no-repeat;
+        }
+        .jcarousel-control-next{
+        background:url('../../../next.png') center center no-repeat;
+        }
+    </style>
+    <script>
+    (function($) {
+    $(function() {
+        var jcarousel = $('.jcarousel');
+
+        jcarousel
+            .on('jcarousel:reload jcarousel:create', function() {
+                var carousel = $(this),
+                    width = carousel.innerWidth();
+
+                if (width >= 600) {
+                    width = width / 3;
+                } else if (width >= 350) {
+                    width = width / 2;
+                }
+
+                carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
+            })
+            .jcarousel({
+                wrap: 'circular'
+            })
+            .on('jcarousel:animateend jcarousel:scrollend', function() {
+                fixWebAccessbility($(this))
+            })
+            .jcarouselAutoscroll({
+                interval: 5000
+            });
+        fixWebAccessbility(jcarousel);
+
+        function fixWebAccessbility(carousel) {
+            var items = carousel.jcarousel('items');
+            var visible = carousel.jcarousel('visible');
+            items.attr("aria-hidden", true).find('a').attr("tabindex", -1);
+            visible.attr("aria-hidden", false).find('a').attr("tabindex", 0);
+        }
+        $('.jcarousel-control-prev')
+            .jcarouselControl({
+                target: '-=1'
+            });
+
+        $('.jcarousel-control-next')
+            .jcarouselControl({
+                target: '+=1'
+            });
+
+        $('.jcarousel-pagination')
+            .on('jcarouselpagination:active', 'a', function() {
+                $(this).addClass('active');
+            })
+            .on('jcarouselpagination:inactive', 'a', function() {
+                $(this).removeClass('active');
+            })
+            .on('click', function(e) {
+                e.preventDefault();
+            })
+            // .jcarouselPagination({
+            //     perPage: 1,
+            //     item: function(page) {
+            //         return '<a href="#' + page + '">' + page + '</a>';
+            //     }
+            // });
+    });
+})(jQuery);
+    $(function(){
+        $(".jcarousel").on("mouseenter focusin",function(){
+            $('.jcarousel').jcarouselAutoscroll("stop")
+        }).on("mouseout focusout",function(){
+            $('.jcarousel').jcarouselAutoscroll("start")
+        })
+
+        $("#pause").click(function(){
+            var action = $(this).attr("data-action");
+            switch(action){
+                case "stop":
+                    $('.jcarousel').jcarouselAutoscroll(action);
+                    $(this).attr("data-action","start");
+                    $(this).text("click to start the carousel");
+                    break;
+                case "start":
+                    $('.jcarousel').jcarouselAutoscroll(action);
+                    $(this).attr("data-action","stop");
+                    $(this).text("click to pause the carousel");
+                    break;
+
+            }
+
+        })
+    })
+    </script>
+    </head>
+    <body>
+
+        <div class="wrapper">
+        <h1>automatic scroll carousel</h1>
+            <div class="jcarousel-wrapper" aria-live="polite">
+                <div class="jcarousel" >
+                    <ul >
+                        <li><a href="#"><img src="../_shared/img/img1.jpg" alt="Image 1"></a></li>
+                        <li><a href="#"><img src="../_shared/img/img2.jpg" alt="Image 2"></a></li>
+                        <li><a href="#"><img src="../_shared/img/img3.jpg" alt="Image 3"></a></li>
+                        <li><a href="#"><img src="../_shared/img/img4.jpg" alt="Image 4"></a></li>
+                        <li><a href="#"><img src="../_shared/img/img5.jpg" alt="Image 5"></a></li>
+                        <li><a href="#"><img src="../_shared/img/img6.jpg" alt="Image 6"></a></li>
+                    </ul>
+                </div>
+
+                <button  class="jcarousel-control-prev" aria-label='previous feature'></button>
+                <button  class="jcarousel-control-next" aria-label='next feature'></button>
+                <a href="#" id="pause" data-action="stop">click to pause the carousel</a>
+                <p class="jcarousel-pagination"></p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Geolocation API地理定位</title>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">
+    </script>
+    <script type="text/javascript">
+    //http://www.w3.org/TR/geolocation-API/
+    //https://developer.mozilla.org/en-US/docs/Web/API/Navigator/geolocation
+    //https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
+    //https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+    function start() {
+        if (navigator.geolocation) {
+
+            var MyPosition = navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+                enableHighAccuracy: true
+            });
+
+        } else {
+
+            alert("很遗憾，您的浏览器不支持HTML5来获取地理位置信息。");
+        }
+        watchCurrentPosition();
+    }
+
+    function successCallback
+        (position) {
+            var coords = position.coords;
+            var latlng = new google.maps.LatLng(coords.latitude, coords.longitude);
+            var myOptions = {
+                zoom: 16,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById("MyPosition"), myOptions);
+            //标记您的位置信息 
+            var marker = new google.maps.Marker({
+                position: latlng, //将前面设定的坐标标注出来
+                map: map //将该标注设置在刚才创建的map中
+            });
+            var infoWindow = new google.maps.InfoWindow({
+                content: "当前您的位置：<br/> 经度：" + latlng.lat() + "<br/>     维度：" + latlng.lng() //提示窗体内的提示信息
+            });
+
+            infoWindow.open(map, marker); //打开提示窗口
+
+        }
+
+
+
+    function errorCallback(error) {
+        switch (error.code) {
+            case error.TIMEOUT:
+                alert("A timeout occured! Please try again!");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert('We can\'t detect your location. Sorry!');
+                break;
+            case error.PERMISSION_DENIED:
+                alert('Please allow geolocation access for this to work.');
+                break;
+            case error.UNKNOWN_ERROR:
+                alert('An unknown error occured!');
+                break;
+        }
+    }
+    var positionTimer;
+
+    function watchCurrentPosition() {
+        positionTimer = navigator.geolocation.watchPosition(successCallback, errorCallback, {
+            enableHighAccuracy: true
+        });
+    }
+
+    function clearWatch() {
+        navigator.geolocation.clearWatch(positionTimer)
+    }
+    </script>
+</head>
+
+<body>
+    <div id="MyPosition" style="width:980px; height: 500px"></div>
+    <button onClick="start()">Get current position on Google Map</button>
+    <button onclick="clearWatch()">clear watch</button>
+    <a href="http://127.0.0.1:9000" target="_blank">http://127.0.0.1:9000</a>
+</body>
+
+</html>

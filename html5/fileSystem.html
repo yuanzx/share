@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Local FileSystem </title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    /** Local FileSystem 
+        requestFileSystem(type, size, successCallback, opt_errorCallback) 
+        TEMPORARY,PERSISTENT 
+    */
+
+    window.webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function(fs) {
+        fs.root.getFile('myfile.txt', {
+            create: true
+        }, function(fileEntry) {
+
+            fileEntry.file(function(file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log(reader.result);
+                };
+                reader.readAsText(file); // 把文件作为纯文本读取（其他格式亦可）
+            });
+
+            fileEntry.createWriter(function(fileWriter) {
+                fileWriter.onwrite = function(e) {
+                    console.log('写入完毕');
+                };
+                fileWriter.onerror = function(e) {
+                    console.log('写入失败')
+                };
+                var bb = new Blob([new Date().toLocaleTimeString()]);
+                fileWriter.write(bb);
+
+            });
+
+
+        });
+    });
+    </script>
+</body>
+
+</html>
