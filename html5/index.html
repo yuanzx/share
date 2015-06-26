@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 Presentation</title>
+    <meta name="description" content="here is description">
+    <meta name="keywords" content="here is keywords">
+    <meta name="author" content="Murphy Yuan">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="../asset/css/reveal.css">
+    <link rel="stylesheet" href="../asset/css/theme/black.css" id="theme">
+    <!-- <link rel="stylesheet" href="../asset/css/zenburn.css"> -->
+    <!--[if lt IE 9]>
+        <script src= "../asset/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section id="html5" data-background="../asset/img/html5-topper.png"></section>
+            <section id="what-is-html5" data-transition="convex">
+                <h4>1. what is html5 ?</h4>
+                <p class='fragment'>HTML5 is the latest version of Hypertext Markup Language(HTML), the standard programming language for describing the contents and appearance of Web pages</p>
+                <p class='fragment'> It's actually three kinds of code: <span class='keywords'>HTML</span>, which provides the structure; Cascading Style Sheets (<span class='keywords'>CSS</span>), which take care of presentation; and <span class='keywords'>JavaScript</span>, which makes things happen</p>
+            </section>
+            <section id="what-does-html5-do" data-transition="convex">
+                <h4>2. what does html5 do ?</h4>
+                <p class='fragment'><span class='keywords'>Cache Manifest</span> make web applications still work when you're offline</p>
+                <p class='fragment'><span class='keywords'>GeoLocation</span> tell websites where you are physically located </p>
+                <p class='fragment'><span class='keywords'>Video</span> handle high definition video.</p>
+                <p class='fragment'><span class='keywords'>Canvas</span> deliver extraordinary graphics
+                </p>
+                <p class='fragment'><span class='keywords'>ARIA</span> make sites more accessible
+                </p>
+                <p class='fragment etc'><span>File System API</span><span>Drag and Drop</span><span>Web Storage</span><span>Web Workers</span><span>WebSocket</span><span>Prefetch Prerender</span><span>WebRTC</span><span>WebGL</span><span>Semantic Elements</span><span>XMLHttpRequest2</span><span>Server-Sent Events(SSE)</span><span>Custom Data </span><span>...</span></p>
+            </section>
+            <section id="key-difference-between-html4-and-html5" data-transition="convex">
+                <h4> 3. key difference between html4 and html5</h4>
+                <p class="fragment">Simple Syntax</p>
+                <p class="fragment">Better Web Application Features(New JS API,Attribute,ARIA)</p>
+                <p class="fragment">Consistency in Handling Malformed Documents</p>
+                <p class="fragment">Backwards Compatibility</p>
+                <p class="fragment">New Semantic Element </p>
+                <p class="fragment"><a href="http://www.w3.org/TR/html5-diff/" target='_blank'>More Info About HTML5 Diff</a> </p>
+                <p class="fragment"><a href="http://www.w3.org/TR/html-design-principles/" target='_blank'>HTML5 Design Principles</a> </p>
+            </section>
+            <section id="geolocation" data-transition="convex">
+                <h4>GeoLocation</h4>
+                <section id="get-current-position">
+                    <pre>
+                     <code>
+             navigator.geolocation.getCurrentPosition
+             (
+                 success_callback_function,
+                 error_callback_function,
+                 position_options
+             )
+                     </code>
+                </pre>
+                </section>
+                <section id="watch-position">
+                    <pre>
+                     <code>
+             navigator.geolocation.watchPosition
+             (
+                 success_callback_function,
+                 error_callback_function,
+                 position_options
+             )
+                     </code>
+                </pre>
+                </section>
+                <section id="clear-watch">
+                    <pre>
+                     <code>
+            navigator.geolocation.clearWatch(watch_position_id)
+                     </code>
+                </pre>
+                </section>
+            </section>
+            <section id="prefetch-and-prerender" data-transition="convex">
+                <h4>prefetch and prerender</h4>
+                <pre>
+                     <code>
+        <link rel="prefetch" href="http://127.0.0.1:9000/" />  
+
+        <link rel="prerender" href="http://127.0.0.1:9000/" /> 
+                     </code>
+                </pre>
+                <p class='fragment'>
+                    <a href="https://html.spec.whatwg.org/multipage/semantics.html#link-type-prefetch" tartget="_blank">prefetch html5  w3c spec</a>
+                </p>
+                <p class='fragment'>
+                    <a href="https://msdn.microsoft.com/en-us/library/dn265039(v=vs.85).aspx" tartget="_blank"> prefetch html5 ie spec</a>
+                </p>
+                <p class='fragment'>
+                    <a tartget="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Link_prefetching_FAQ">prefetch html5 firefox spec</a>
+                </p>
+            </section>
+            <section id="semantic-element" data-transition="convex">
+                <h4>Semantic Element</h4>
+                <figure style='float:left;width:50%;text-align:center'>
+                    <img src="../asset/img/html5-layout.png" alt="html5 new semantic element">
+                    <figcaption>html4 structure</figcaption>
+                </figure>
+                <figure style='float:left;width:50%;text-align:center'>
+                    <img src="../asset/img/html5-layout.jpg" alt="html5 new semantic element">
+                    <figcaption>html5 structure</figcaption>
+                </figure>
+            </section>
+            <section id="webStorage" data-transition="convex">
+                <h4>Web Storage</h4>
+                <p><span class="keywords">localStorage</span></p>
+                <p><span class="keywords">sessionStorage</span></p>
+                <img src="../asset/img/storage.png" alt="html5 web storage" width="600px" class="fragment">
+                <img src="../asset/img/support.jpg" alt="html5 web storage support" width="600px" class="fragment">
+            </section>
+            <section id="indexedDB" data-transition="convex">
+                <h4>IndexedDB</h4>
+                <img src="../asset/img/indexDB.png" alt="html5 indexedDB">
+                <p class='fragment'>
+                    <a tartget="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Concepts_Behind_IndexedDB">what's indexedDB</a>
+                </p>
+                <p class='fragment'>
+                    <a tartget="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB">how to use indexedDB</a>
+                </p>
+            </section>
+            <section id="drag-and-drop-upload" data-transition="convex">
+                <h4>drag and drop upload</h4>
+                <a href="http://html5demos.com/dnd-upload"> demo </a>
+            </section>
+        </div>
+    </div>
+    <script src="../asset/js/head.min.js"></script>
+    <script src="../asset/js/reveal.js"></script>
+    <script>
+    Reveal.initialize({
+        parallaxBackgroundImage: '../asset/img/blue-bg.png',
+        history: true,
+        //transition: 'zoom', // none/fade/slide/convex/concave/zoom
+        dependencies: [{
+            src: '../asset/js/js/classList.js',
+            condition: function() {
+                return !document.body.classList;
+            }
+        }, {
+            src: '../asset/js/highlight.js',
+            async: true,
+            callback: function() {
+                hljs.initHighlightingOnLoad();
+            }
+        }, {
+            src: '../asset/js/zoom.js',
+            async: true
+        }, {
+            src: '../asset/js/math.js',
+            async: true
+        }]
+    });
+    </script>
+</body>
+
+</html>
