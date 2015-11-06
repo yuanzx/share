@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>wind.js</title>
+	<script>
+	$(document).on("#loginPage #loginButton", "click", function () {
+	    var userName = $("#username").val();
+	    var password = $("#password").val();
+	    if (isNullOrEmpty(userName)) {
+	        alert(lang.usernameCannotEmpty);
+	        return;
+	    }
+	    if (isNullOrEmpty(password)) {
+	        alert(lang.passwordCannotEmpty);
+	        return;
+	    }
+	    showLoading("登录中...");
+	    login(userName, password, "normal", function (result) {
+	        if (!result.status) {
+	            alert(result.message);
+	        }
+	        else {
+	            showPage("taskListPage");
+	            hideLoading();
+	        }
+	    });
+
+	    // startLoginAsync(userName, password, 'normal').start();
+	});
+	</script>
+
+
+	<script>
+	function login(userName, password, type, callback) {
+	    if (callback == null) {
+	        return;
+	    }
+
+	    callIfNetworkAvailable(function() {
+	        callNativeAPI(
+	            native_refreshUrl,
+	            { key: 'Login', username: userName, password: password, type: type },
+	            function (result) {
+	                callback(result);
+	            }
+	        );
+	    });
+	}
+	function callIfNetworkAvailable(fn) {
+	    if (fn == null) {
+	        return;
+	    }
+	    getNetworkStatus(function (result) {
+	        if (result.status) {
+	            if (result.data) {
+	                fn();
+	            }
+	            else {
+	                hideLoadingMsg();
+	                alert(lang.networkUnAvailable);
+	            }
+	        }
+	        else {
+	            hideLoadingMsg();
+	            alert(lang.getNetworkAvailableStatusFailed);
+	        }
+	    });
+	}
+	function getNetworkStatus(callback) {
+	    if (callback == null) {
+	        return;
+	    }
+	    callNativeAPI(
+	        native_getUrl,
+	        { key: 'GetNetworkStatus' },
+	        function (result) {
+	            callback(result);
+	        }
+	    );
+	}
+	function callNativeAPI(url, data, callback) { 
+	    Cordova.exec(
+	        function (result) {
+	            if (callback != null) {
+	                callback(result);
+	        }
+	    })
+	}
+	</script>
+
+	
+</head>
+<body>
+<script>
+	//用户登录
+	var loginAsync = eval(Wind.compile('async', function (userName, password, type) {
+	    var result = $await(callIfNetworkAvailableAsync());
+	    if(result) {
+	        var result = $await(callNativeAPIAsync(native_refreshUrl,
+	        { key: 'Login', username: userName, password: password, type: type }));
+	        return result;
+	    }
+	    return null;
+	}));
+
+	//在当前网络可用的情况下调用指定函数
+	var callIfNetworkAvailableAsync = eval(Wind.compile('async', function() {
+	    var result = $await(getNetworkStatusAsync());
+	    if (result.status) {
+	        if (result.data) {
+	            return true;
+	        }
+	        else {
+	            hideLoadingMsg();
+	            alert(lang.networkUnAvailable);
+	        }
+	    }
+	    else {
+	        hideLoadingMsg();
+	        alert(lang.getNetworkAvailableStatusFailed);
+	    }
+	    return false;
+	}));
+
+	//获取当前网络状态
+	var getNetworkStatusAsync = eval(Wind.compile('async', function() {
+	    var result = $await(callNativeAPIAsync(native_getUrl, { key: 'GetNetworkStatus' }));
+	    return result;
+	}));
+
+	//JS端与PhoneGap Native API进行交互
+	var callNativeAPIAsync = eval(Wind.compile('async', function(url, data) {
+	    var items = url.split("/");
+	    var serviceName = items[0];
+	    var actionName = items[1].toLowerCase();
+	    //因为参数必须是数组，所以把参数放在一个数组中
+	    var params = [];
+	    params.push(data);
+	    $await(logAsync({ step: '调用Native接口前的参数信息', parameters: data }));
+	    //调用Native接口
+	    var result = $await($.cordovaAsync(serviceName, actionName, params));
+	    if(result) {
+	        $await(logAsync({ step: '调用Native接口的返回值信息', returnValue: result }));
+	    }
+	    return result;
+	}));
+
+	var startLoginAsync = eval(Wind.compile('async', function (userName, password, type) {
+	    var result = $await(loginAsync(userName, password, type));
+	    if(result) {
+	        if (!result.status) {
+	            alert(result.message);
+	        }
+	        else {
+	            hideLoading();
+	            showPage("taskListPage");
+	        }
+	    }
+	}));
+	</script>
+</body>
+</html>

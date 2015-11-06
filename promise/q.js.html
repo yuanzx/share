@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>promise</title>
+	<script>
+var ngApp=angular.module('ngApp',[]);
+             
+/*******************************************************************
+ * $q为内置服务
+****************************************************************/
+ngApp.factory('UserInfoService',['$http','$q',function($http,$q){
+    return{
+       query:function(){
+        var defer=$q.defer();  //声明延后执行
+        $http({method:'GET',url:'data/students.json'}).
+        success(function(data,status,headers,config){
+            defer.resolve(data);  //声明执行成功
+            console.log('UserInfoService success');
+        }).
+        error(function(data,status,headers,config){
+            defer.reject("fail");      //声明执行失败
+        });
+                         
+        return defer.promise; //返回承诺，返回获取数据的API
+        }
+        }
+    }]);
+             
+    ngApp.controller('MainCtrl',['$scope','UserInfoService',function($scope,UserInfoService){
+    　　　　 var promise = UserInfoService.query();  //同步调用，获取承诺接口
+        promise.then(function(data){
+            $scope.user=data;  //调用承诺接口resolove()
+            console.log('MainCtrl ...');
+            },function(data){
+              $scope.user={error:'数据不存在。。。'}; //调用承诺接口reject();
+            });
+                 
+            }]);
+	</script>
+</head>
+<body>
+	<script>
+function $http(requestConfig) {
+  ...
+
+  var chain = [serverRequest, undefined];
+  var promise = $q.when(config);
+
+  // apply interceptors
+  forEach(reversedInterceptors, function(interceptor) {
+    if (interceptor.request || interceptor.requestError) {
+      chain.unshift(interceptor.request, interceptor.requestError);
+    }
+    if (interceptor.response || interceptor.responseError) {
+      chain.push(interceptor.response, interceptor.responseError);
+    }
+  });
+
+  while (chain.length) {
+    var thenFn = chain.shift();
+    var rejectFn = chain.shift();
+
+    promise = promise.then(thenFn, rejectFn);
+  }
+
+  promise.success = function(fn) {
+    promise.then(function(response) {
+      fn(response.data, response.status, response.headers, config);
+    });
+    return promise;
+  };
+
+  promise.error = function(fn) {
+    promise.then(null, function(response) {
+      fn(response.data, response.status, response.headers, config);
+    });
+    return promise;
+  };
+
+  return promise;
+};
+	</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script> 
+
+	var A = B = C  = function(){
+
+	}
+//同步情况
+	A();
+	B();
+	C();
+//异步按顺序执行 A->B->C
+A(function(){
+    B(function(){
+        C();
+    });
+});
+
+
+
+//A,B执行完毕，执行C..
+
+//eventproxy
+proxy.bind('aDone',B)
+proxy.bind('bDone',C)
+function A(){
+    proxy.trigger('aDone');
+}
+function B(){
+    proxy.trigger('bDone');
+}
+function C(){
+
+}
+
+//wind 无需修改
+ eval(Wind.compile('async',function(){
+ var a =	$await(A());
+ var b =	$await(B());
+ 	$await(C())
+ }))
+
+//step.js||flow.js ,函数都需修改
+Step(A(),B(),C())
+
+//promise
+Q.fcall(A())
+  .then(B())
+  .then(C())
+
+//async.js
+async.series({
+    one: function(callback){
+        callback(null, 1);
+    },
+    two: function(callback){
+        callback(null, 2);
+    }
+},function(err, results) {
+    console.log(results);
+});
+=>{one: 1, two: 2}
+
+
+async.waterfall([
+    function(callback){
+        callback(null, 'one', 'two');
+    },
+    function(arg1, arg2, callback){
+      // arg1 now equals 'one' and arg2 now equals 'two'
+        callback(null, 'three');
+    },
+    function(arg1, callback){
+        // arg1 now equals 'three'
+        callback(null, 'done');
+    }
+], function (err, result) {
+   // result now equals 'done'
+   console.log(result);
+});
+
+//generator
+
+
+//Promise + generator  = async
+async function showStuff () {
+  var data = await loadData() // loadData 返回一个 Promise
+  console.log(data) // data 已经加载完毕
+}
+
+async function () {
+  await showStuff() // async 函数默认返回一个 Promise, 所以可以 await 另一个 async 函数
+  // 这里 showStuff 已经执行完毕
+}
+	</script>
+</head>
+<body>
+	 
+</body>
+</html>

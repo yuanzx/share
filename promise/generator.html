@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script>
+
+	
+	//同步运行
+	function* test1(){
+		console.log("begin");
+		var result1 = yield getNum();
+		console.log("result1:"+result1);
+		var result2 = yield getNum();
+		console.log("result2:"+result2); 
+	}
+	function getNum(ms){
+		setTimeout(function(){
+			var num = (Math.random()*1000).toFixed(0);
+			a.next(num);
+		}, ms||1000);
+	}
+	var a = test1();
+
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

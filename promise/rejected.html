@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script>
+		ajax( ".." )  
+		.then( transformResult )
+		.then(
+		    displayAnswer,
+		    reportError
+		);
+
+
+	var promiseA = ajax( ".." );
+
+	var promiseB = promiseA.then( transformResult );
+
+	var promiseC = promiseB.then(  
+	    displayAnswer,
+	    reportError
+	);
+	
+
+
+	promiseC.then( null, reportError );
+
+	promiseC.catch( reportError );	
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

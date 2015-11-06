@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>promise</title>
+    <meta name="description" content="callback">
+    <meta name="keywords" content="here is keywords">
+    <meta name="author" content="Murphy Yuan">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="../asset/css/reveal.css">
+    <link rel="stylesheet" href="../asset/css/theme/black.css" id="theme">
+    <!-- <link rel="stylesheet" href="../asset/css/zenburn.css"> -->
+    <!--[if lt IE 9]>
+        <script src= "../asset/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section id="promise" data-background="../asset/img/promise.jpg"></section>
+            <section id="what-is-promise" data-transition="convex">
+                <h4>1. 什么是 promise ?</h4>
+                <p class='fragment'>一个开放、健全且通用的 JavaScript Promise 标准。由开发者制定，供开发者参考。</p>
+                <p  class='fragment'>一种更好的方法去优化异步编程的体验，同时也写出更健壮的异步代码</p>
+                <p class='fragment'>代表将来要返回的一个值</p>
+                <p class='fragment'> <a href="https://promisesaplus.com/" target="_blank">英文原文</a><br>
+                <a href="http://www.ituring.com.cn/article/66566"  target="_blank">中文翻译</a></p>
+            </section>
+            <section id="common-async" data-transition="convex">
+                <h4>2. 常用的异步操作</h4>
+                <p class='fragment'>Ajax（XMLHttpRequest/XMLHttpRequest2）</p>
+                <p class='fragment'>Image Tag，Script Tag，iframe（原理类似） </p>
+                <p class='fragment'>setTimeout/setInterval/setImmediate </p>
+                <p class='fragment'>CSS3 Transition/Animation/requestAnimationFrame 
+                </p>
+                <p class='fragment'>HTML5 WebStorage/IndexedDB/File System API/GeoLocation
+                /Video/PostMessage/WebSocket/WebWorker/WebRTC...
+                </p>
+                  <p class='fragment'>DOM操作 MutationObserver.. 
+                </p> 
+                                  <p class='fragment'>Node process.nextTick...
+                </p> 
+            </section>
+            <section id="async-method" data-transition="convex">
+                <h4> 异步编程方法</h4>
+                <p class="fragment">直接回调</p>
+                <p class="fragment">消息驱动(订阅/发布,事件监听)——代表：<a href="http://weibo.com/shyvo">@朴灵</a> 的<a href="https://github.com/JacksonTian/eventproxy">EventProxy</a></p>
+                <p class="fragment">二次编译——代表：<a href="http://weibo.com/jeffz">@老赵</a> 的<a href="https://github.com/JeffreyZhao/jscex">Jscex</a></p>
+                <p class="fragment">Promise模式——代表：<a href="http://wiki.commonjs.org/wiki/Promises">CommonJS Promises</a>，<a href="http://cho45.stfuawsc.com/jsdeferred/">jsdeferred</a>，<a href="http://dojotoolkit.org/">Dojo</a>&nbsp;JQuery,<a href="https://github.com/cujojs/when">when.js</a>,<a href="https://github.com/kriskowal/q/blob/v1/design/README.js">Q.js</a>...</p> 
+                <p class="fragment"><a href="https://github.com/creationix/step">step.js</a> &nbsp;&nbsp;  <a href="https://github.com/caolan/async/">async.js</a>
+                    <a href="https://github.com/willconant/flow-js">flow.js</a>
+                </p>
+                <p class="fragment">Generator(ES6)</p>
+                <p class="fragment">Async(ES7)</p>
+            </section>
+
+            <section id="promiseA" data-transition="convex">
+                <h4> PromiseA+ 规范</h4>
+                <p class="fragment">Promise 对象有三种状态： Pending – Promise对象的初始状态，等到任务的完成或者被拒绝；Fulfilled – 任务执行完成并且成功的状态；Rejected – 任务执行完成并且失败的状态</p>
+                <p class="fragment">Promise的状态只可能从“Pending”状态转到“Fulfilled”状态或者“Rejected”状态，而且不能逆向转换，同时“Fulfilled”状态和“Rejected”状态也不能相互转换</p>
+                <p class="fragment">Promise对象必须实现then方法，then是promise规范的核心，而且then方法也必须返回一个Promise对象，同一个Promise对象可以注册多个then方法，并且回调的执行顺序跟它们的注册顺序一致；</p>
+                <p class="fragment">then方法接受两个回调函数，它们分别为：成功时的回调和失败时的回调；并且它们分别在：Promise由“Pending”状态转换到“Fulfilled”状态时被调用和在Promise由“Pending”状态转换到“Rejected”状态时被调用</p>
+             
+
+            </section>
+            <section  id="promiseAPic" data-transition="convex">
+                <img src="../asset/img/promise.png" alt="">
+            </section>
+            <section id="ES6" data-transition="convex">
+             <h4> Generator(ES6)</h4>
+                   <p class="fragment"></p>
+            </section>
+            <section id="ES7" data-transition="convex">
+             <h4> Async(ES7)</h4>
+            </section>              
+        </div>
+    </div>
+    <script src="../asset/js/head.min.js"></script>
+    <script src="../asset/js/reveal.js"></script>
+    <script>
+    Reveal.initialize({
+        parallaxBackgroundImage: '../asset/img/blue-bg.png',
+        history: true,
+        // transition: 'zoom', // none/fade/slide/convex/concave/zoom
+        dependencies: [{
+            src: '../asset/js/js/classList.js',
+            condition: function() {
+                return !document.body.classList;
+            }
+        }, {
+            src: '../asset/js/highlight.js',
+            async: true,
+            callback: function() {
+                hljs.initHighlightingOnLoad();
+            }
+        }, {
+            src: '../asset/js/zoom.js',
+            async: true
+        }]
+    });
+    </script>
+</body>
+
+</html>
