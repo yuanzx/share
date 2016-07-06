@@ -14,7 +14,7 @@
     }
     </style>
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=A607d61b18d43a1ff27abf4ac67da83c&s=1"></script>
-    <script type="text/javascript" src="https://developer.baidu.com/map/jsdemo/demo/convertor.js&s=1"></script>
+    <!--<script type="text/javascript" src="https://developer.baidu.com/map/jsdemo/demo/convertor.js&s=1"></script>-->
     <title>浏览器定位</title>
 </head>
 
@@ -32,7 +32,7 @@
         console.log(currentLat);
         console.log(currentLon);
         var gpsPoint = new BMap.Point(currentLon, currentLat);
-        BMap.Convertor.translate(gpsPoint, 0, initMap); //转换坐标 
+        // BMap.Convertor.translate(gpsPoint, 0, initMap); //转换坐标 
     }
 
     function initMap(point) {
