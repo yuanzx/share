@@ -33,6 +33,7 @@
         console.log(currentLon);
         var gpsPoint = new BMap.Point(currentLon, currentLat);
         // BMap.Convertor.translate(gpsPoint, 0, initMap); //转换坐标 
+        initMap(gpsPoint)
     }
 
     function initMap(point) {
