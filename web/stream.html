@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>xhr stream</title>
+    <script>
+    /*
+        这里由于客户端收到的数据是分段发过来的，所以最好定义一个游标received，
+        来获取最新数据而舍弃之前已经接收到的数据，通过这个游标每次将接收到的最新数据打印出来，
+        并且在通信结束后打印出整个responseText
+    */
+        function createStreamClient(url,progress,done){
+            var xhr=new XMLHttpRequest(),received=0;
+            xhr.open("get",url,true);
+            xhr.onreadystatechange=function(){
+                var result;
+                if(xhr.readyState==3){//ie<10 在readyState = 3的时候获取数据有 2kb padding问题，很老的chrome也有此问题
+                    //console.log(xhr.responseText);
+                    result=xhr.responseText.substring(received);
+                    received+=result.length;
+                    progress(result);
+                }else if(xhr.readyState==4){
+                    done(xhr.responseText);
+                }
+            };
+            xhr.send(null);
+            return xhr;
+    }
+    var client=createStreamClient("http://localhost:8088/stream",function(data){
+        console.log("Received:"+data);
+    },function(data){
+        console.log("Done,the last data is:"+data);
+    })
+    </script>
+</head>
+<body>
+    这种方式的思想是构造一个XHR对象，通过监听它的onreadystatechange事件，
+    当它的readyState为3的时候，获取它的responseText然后进行处理，
+    readyState为3表示数据传送中，整个通信过程还没有结束，
+    所以它还在不断获取服务端发送过来的数据，直到readyState为4的时候才表示数据发送完毕，一次通信过程结束。
+    在这个过程中，服务端传给客户端的数据是分多次以stream的形式发送给客户端，客户端也是通过stream形式来获取的，
+    所以称作http-streaming数据流方式
+
+    iComet 是一个使用 C++ 语言开发的支持百万并发连接的 comet/push 服务器,
+    支持百万级并发连接, 内存占用少, 性能优越. 可用于移动 App 的 Push Server(消息推送服务器),
+    或者用于 Web Push(Web 服务器推). 用于 Web Push 时,
+    支持的浏览器和操作系统平台包括: Safari(iOS, Mac), Firefox/Chrome(Windows, Mac)
+</body>
+</html>

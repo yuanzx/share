@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>webrtc</title>
+    <script type="text/javascript">
+
+        function getMedia(){
+            //MediaRecorder视频录制
+            //https://wangduanduan.github.io/webrtc/demos/chat-with-your-friend.html
+                var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+                var constraints = { // 音频、视频约束
+                  audio: true, // 指定请求音频Track
+                  video: {  // 指定请求视频Track
+                      mandatory: { // 对视频Track的强制约束条件
+                          // width: {min: 320},
+                          // height: {min: 180}
+                      },
+                      optional: [ // 对视频Track的可选约束条件
+                          {frameRate: 30}
+                      ]
+                  }
+                };
+                navigator.getUserMedia(constraints, function(localMediaStream) {
+                    var video = document.getElementById('video');
+                    video.src = window.URL.createObjectURL(localMediaStream);
+                    video.onloadedmetadata = function(e) {
+                        console.log("Label: " + localMediaStream.label);
+                        console.log("AudioTracks", localMediaStream.getAudioTracks());
+                        console.log("VideoTracks", localMediaStream.getVideoTracks());
+                    };
+                }, function(e) {
+                    console.log('Reeeejected!', e);
+                })
+        }
+
+
+
+
+        function dataChannel(peerConnection){
+            /*
+            * ordered: 数据通道是否保证按序传输数据
+            * maxRetrasmitTime：在信息失败前的最大重传时间（强迫进入不可靠模式）
+            * maxRetransmits：在信息失败前的最大重传次数（强迫进入不可靠模式）
+            * protocol：允许使用一个自协议，但如果协议不支持，将会失败
+            * negotiated：如果设为true，将一处对方的数据通道的自动设置，也就是说，将使用相同的id以自己配置的方式与对方建立数据通道
+            * id：为数据通道提供一个自己定义的ID
+            */
+            var dataChannelOptions = {
+              ordered: false, //不保证到达顺序
+              maxRetransmitTime: 3000, //最大重传时间
+            };
+            var peerConnection = new RTCPeerConnection();
+
+            //使用信令传输信道创建对等连接
+            var dataChannel =
+              peerConnection.createDataChannel("myLabel", dataChannelOptions);
+
+            dataChannel.onerror = function (error) {
+              console.log("Data Channel Error:", error);
+            };
+
+            dataChannel.onmessage = function (event) {
+              console.log("Got Data Channel Message:", event.data);
+            };
+
+            dataChannel.onopen = function () {
+              dataChannel.send("Hello World!");
+            };
+
+            dataChannel.onclose = function () {
+              console.log("The Data Channel is Closed");
+            };
+        }
+
+        function peer() {
+            var ice = {
+                'iceServers': [{
+                        'url': 'stun:stun.l.google.com:19302'
+                    }, // google公共测试服务器
+                    // {"url": "turn:user@turnservera.com", "credential": "pass"}
+                ]
+            };
+
+
+            var pc = new RTCPeerConnection(ice);
+            navigator.getUserMedia({
+                'audio': true,
+                'video':true
+            }, gotStream, logError);
+
+            function gotStream(stram) {
+                pc.addStream(stram);
+
+                pc.createOffer().then(function(offer) {
+                    console.log("offer");
+                    console.log(offer);
+                    pc.setLocalDescription(offer);
+                });
+            }
+
+            pc.onicecandidate = function(evt) {
+
+                if (evt.target.iceGatheringState == 'complete') {
+                    console.log(evt);
+                    // pc.createOffer().then(function(offer) {
+                    //     console.log(offer.sdp);
+                    // })
+                }
+            }
+            function logError() {
+                console.log('error');
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <p>
+        谷歌2010年以6820万美元收购Global IP Solutions公司而获得的一项技术,2011年开源。 WebRTC提供了视频会议的核心技术，包括音视频的采集、编解码（压缩）、网络传输（延迟丢包，多路复用，拥塞，流量控制）、显示（抖动，去噪，回声消除，影响增强,声音和画面同步）...， 并且还支持跨平台：windows，linux，mac，android
+    </p>
+    <p>
+        WebRTC实现了三个API，分别是:
+    </p>
+
+    <p>
+        MediaStream
+    </p>
+    <pre>
+        通过MediaStream的API能够通过设备的摄像头及话筒获得视频、音频的同步流
+    </pre>
+
+    <p>
+        RTCPeerConnection
+        <pre>
+            RTCPeerConnection是WebRTC用于构建点对点之间稳定、高效的流传输的组件
+            NAT（Network Address Translation，网络地址转换
+            STUN（Session Traversal Utilities for NAT，NAT会话穿越应用程序）是一种网络协议，它允许位于NAT（或多重NAT）后的客户端找出自己的公网地址，
+            查出自己位于哪种类型的NAT之后以及NAT为某一个本地端口所绑定的Internet端端口。
+            这些信息被用来在两个同时处于NAT路由器之后的主机之间创建UDP通信。
+            TURN（全名Traversal Using Relay NAT, NAT中继穿透），是一种资料传输协议（data-transfer protocol）。允许在TCP或UDP的连线上跨越NAT或防火墙
+            目前常用的针对UDP的NAT 穿透（NAT Traversal）方法主要有：STUN、TURN、ICE、uPnP等。其中ICE方式由于其结合了STUN和TURN的特点，所以使用最为广泛
+
+            ICE，全名叫交互式连接建立（Interactive Connectivity Establishment）,
+            一种综合性的NAT穿越技术，它是一种框架，可以整合各种NAT穿越技术如STUN、TURN（Traversal Using Relay NAT 中继NAT实现的穿透）。
+            ICE会先使用STUN，尝试建立一个基于UDP的连接，如果失败了，就会去TCP（先尝试HTTP，然后尝试HTTPS），如果依旧失败ICE就会使用一个中继的TURN服务器
+
+            WebRTC使用SDP（Session Description Protocol，会话描述协议）描述端到端连接的参数。
+            SDP用于描述"会话状况"，表现为一系列的连接属性：要交换的媒体类型（音频、视频及应用数据）、网络传输协议、使用的编解码器及其设置、带宽及其他元数据
+        </pre>
+    </p>
+    <p>
+        RTCDataChannel：RTCDataChannel使得浏览器之间（点对点）建立一个高吞吐量、低延时的信道，用于传输任意数据<br>
+        在WebRTC所有的组件中，都会强制进行加密。在RTCDataChannel中，所有的数据都使用数据报传输层安全性（DTLS）。DTLS是SSL的衍生，也就是说，你的数据将和使用基于SSL的连接一样安全。DTLS已经被标准化，并内置于所有支持WebRTC的浏览器中
+
+        <pre>
+            RTCDataChannel API 点对点的信道来传递实时的视频、音频数据流
+            DataChannel是建立在PeerConnection上的，不能单独使用
+
+            //pc 为 RTCPeerConnection实例
+            我们可以使用channel = pc.createDataChannel("someLabel");来在PeerConnection的实例上创建Data Channel，并给与它一个标签
+
+            DataChannel使用方式几乎和WebSocket一样，有几个事件：
+                onopen
+                onclose
+                onmessage
+                onerror
+
+            同时它有几个状态，可以通过readyState获取：
+                connecting: 浏览器之间正在试图建立channel
+                open：建立成功，可以使用send方法发送数据了
+                closing：浏览器正在关闭channel
+                closed：channel已经被关闭了
+
+            两个暴露的方法:
+                close(): 用于关闭channel
+                send()：用于通过channel向对方发送数据
+
+            RTCDataChannel使用Stream Control Transmission Protocol(SCTP)协议，允许我们配置传递语义：我们可以配置包传输的顺序并提供重传时的一些配置
+        </pre>
+    </p>
+
+    <img src="webrtc.jpeg" alt="">
+    <img src="ice1.png" alt="">
+    <img src="webrtc2.png" alt="">
+    <img src="webrtc3.png" alt="">
+     <video id="video" autoplay></video>
+</body>
+
+</html>

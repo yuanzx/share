@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SSE</title>
+    <link rel="shortcut icon" href="http://.ico">
+</head>
+<body>
+    <p>
+        SSE 要求服务器与浏览器保持连接。
+        对于不同的服务器软件来说，所消耗的资源是不一样的。
+        Apache 服务器，每个连接就是一个线程，如果要维持大量连接，势必要消耗大量资源。
+        Node 则是所有连接都使用同一个线程，因此消耗的资源会小得多，但是这要求每个连接不能包含很耗时的操作，
+        比如磁盘的 IO 读写</p>
+        <a href="javascript:doConnect()">建立连接</a> <a href="javascript:doClose()">主动断开</a>
+<pre>
+    EventSource实例的readyState属性，表明连接的当前状态。该属性只读，可以取以下值。
+    0：相当于常量EventSource.CONNECTING，表示连接还未建立，或者断线正在重连。
+    1：相当于常量EventSource.OPEN，表示连接已经建立，可以接受数据。
+    2：相当于常量EventSource.CLOSED，表示连接已断，且不会重连。
+</pre>
+
+    <div id="example"></div>
+    <script>
+    //   document.cookie = "name=test;abc=123";
+      var source = null;
+
+      var div = document.getElementById('example');
+
+     function doConnect() {
+         var time = Date.now();
+         source = new EventSource('/sse'); //http或者https协议
+        //  source = new EventSource('http://localhost:8088/sse', { withCredentials: true }); //跨域是否带上cookie
+         console.log("创建前的状态：",source.readyState)
+         source.onopen = function (event) {
+             console.log("创建耗时:",Date.now()-time+"毫秒");
+             time = Date.now();
+             console.log("创建完毕的状态：",source.readyState)
+           div.innerHTML += '<p>Connection open ...</p>';
+         };
+
+         source.onerror = function (event) {
+           div.innerHTML += '<p>Connection close.</p>';
+         };
+
+         source.addEventListener('test', function (event) {
+           div.innerHTML += ('<p>test event: ' + event.data + '</p>');
+         }, false);
+
+         source.addEventListener('close', function (event) {
+           div.innerHTML += ('<p>close event: ' + event.data + '</p>');
+           doClose()
+         }, false);
+        //  source.onclose = function(){
+        //      alert("close")
+        //  }
+         source.onmessage = function (event) {
+           div.innerHTML += ('<p>data: ' + event.data + ';lastEventId:'+event.lastEventId+'</p>');
+         };
+     }
+      function doClose(){
+          source.close();
+         console.log("关闭时的状态：",source.readyState)
+      }
+
+    </script>
+    <img src="sse.jpg" alt="" style="margin:20px auto;width:80%">
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    html,body{
+        margin:0;padding:0
+    }
+        .outside{
+            display: flex;
+            flex-wrap: wrap;
+            background: black
+        }
+        .inside{
+            height:200px;
+            width:calc(33.3333% - 14px);
+            margin-bottom: 20px;
+            background-color: #ccc
+        }
+        .inside:nth-child(3n+2){
+            margin:0  21px
+        }
+
+    </style>
+</head>
+<body>
+    <div class="outside">
+        <div class="inside"  style="background-color:red">
+        </div>
+        <div class="inside"  style="background-color:purple">
+        </div>
+        <div class="inside"  style="background-color:blue">
+        </div>
+        <div class="inside" style="background-color:yellow">
+        </div>
+    </div>
+</body>
+</html>

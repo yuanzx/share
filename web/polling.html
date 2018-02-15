@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>polling</title>
+    <link rel="shortcut icon" href="http://.ico">
+    <script type="text/javascript">
+    /*
+    readyState表示XMLHttpRequest对象的处理状态：
+        0:XMLHttpRequest对象还没有完成初始化。
+        1:XMLHttpRequest对象开始发送请求。
+        2:XMLHttpRequest对象的请求发送完成。
+        3:XMLHttpRequest对象开始读取服务器的响应。
+        4:XMLHttpRequest对象读取服务器响应结束。
+    */
+
+        function createXHR() {
+            if (typeof XMLHttpRequest != 'undefined') {
+                return new XMLHttpRequest();
+            } else if (typeof ActiveXObject != 'undefined') {
+                if (typeof arguments.callee.activeXString != "string") {
+                    var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0",
+                            "MSXML2.XMLHttp"
+                        ],
+                        i, len;
+                    for (i = 0, len = versions.length; i < len; i++) {
+                        try {
+                            new ActiveXObject(versions[i]);
+                            arguments.callee.activeXString = versions[i];
+                            break;
+                        } catch (ex) {
+
+                        }
+                    }
+                }
+                return new ActiveXObject(arguments.callee.activeXString);
+            } else {
+                throw new Error("no xhr object available");
+            }
+        }
+
+        function polling(url, method, data) {
+            method = method || 'get';
+            data = data || null;
+            var xhr = createXHR();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        console.log(xhr.responseText);
+                    } else {
+                        console.log("fail");
+                    }
+                }
+            };
+            xhr.open(method, url, true);
+            xhr.send(data);
+        }
+
+
+        function create(){
+            var now = Date.now();
+            createXHR();
+            console.log(Date.now()-now);
+        }
+        function request(){
+            setInterval(function() {
+                polling('http://localhost:8088/time', 'get');
+            }, 2000);
+        }
+    </script>
+</head>
+<body style="text-align:center">
+    <button onclick="create()">创建一个XHR对象</button>
+    <button onclick="request()">开始请求</button>
+<p style="text-align:left;width:80%;font-size:26px;margin:0 auto">
+Polling 这是最简单的一种解决方案，其原理是在客户端通过Ajax的方式的方式每隔一小段时间就发送一个请求到服务器，
+服务器返回最新数据，然后客户端根据获得的数据来更新界面，这样就间接实现了"即时"通信。
+<br>
+优点是简单
+<br>
+缺点是对服务器压力较大，浪费带宽流量,由于每次都要发送一个请求，
+服务端不管数据是否发生变化都发送数据，请求完成后连接关闭。 这中间经过的很多通信是不必要的
+</p>
+    <img src="test.png" alt="" width="80%" style="margin:50px 0">
+    <img src="test2.png" alt="" width="80%" style="margin:50px 0">
+</body>
+
+</html>
