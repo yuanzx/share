@@ -1,12 +1,12 @@
-const Path = require('path');
-const ROOT_PATH = Path.resolve(__dirname);
-const APP_PATH = Path.resolve(ROOT_PATH, 'app');
-const BUILD_PATH = Path.resolve(ROOT_PATH, 'build');
+const path = require('path');
+const ROOT_PATH = path.resolve(__dirname);
+const APP_PATH = path.resolve(ROOT_PATH, 'src');
+const BUILD_PATH = path.resolve(ROOT_PATH, 'build');
 const HtmlwebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: {
-        index: Path.resolve(APP_PATH, 'index.jsx')
+        index: path.resolve(APP_PATH, 'index.jsx')
     },
     output: {
         path: BUILD_PATH,
@@ -19,7 +19,9 @@ module.exports = {
         loaders: [
             {
                 test: /\.css$/,
-                loader: 'style-loader!css-loader'
+                loaders: [
+                    'style-loader', 'css-loader', 'postcss-loader'
+                ]
             }, {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -28,15 +30,9 @@ module.exports = {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
                 loaders: [
-                    'react-hot-loader', 'babel-loader?presets[]=es2015&presets[]=react'
+                    'react-hot-loader', 'babel-loader'  //或者只使用'react-hot-loader/webpack'
                 ],
                 include: APP_PATH
-            }, {
-                test: /\.scss$/,
-                loader: 'style-loader!css-loader!sass-loader?sourceMap'
-            }, {
-                test: /\.(png|jpg|gif)$/,
-                loader: 'url-loader?limit=8192'
             }
         ]
     },

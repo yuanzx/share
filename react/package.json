@@ -1,20 +1,26 @@
 {
-  "name": "venus",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "webpack": "^3.11.0"
-  }
+    "name": "venus",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack  --colors --inline --hot --progress --watch --profile --hide-modules"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0",
+        "autoprefixer": "^8.0.0",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "html-webpack-plugin": "^2.30.1",
+        "postcss-loader": "^2.1.0",
+        "react-hot-loader": "^3.1.3",
+        "style-loader": "^0.20.2",
+        "webpack": "^3.11.0",
+        "webpack-dev-server": "^2.11.1"
+    }
 }
